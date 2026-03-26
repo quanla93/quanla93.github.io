@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Anh Quan | Java Developer</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Cursor glow effect -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Particle background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <img src="favicon.svg" alt="QL" class="nav-logo-icon">
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <p class="hero-greeting">
+                    <span class="greeting-line"></span>
+                    <span class="typing-text">Hi, I'm</span>
+                </p>
+                <h1 class="hero-name">
+                    <span class="name-line" data-text="Le Anh Quan">Le Anh Quan</span>
+                </h1>
+                <h2 class="hero-title">
+                    <span class="title-wrapper">
+                        <span class="title-static">I build </span>
+                        <span class="title-dynamic" id="dynamicTitle"></span>
+                        <span class="title-cursor">|</span>
+                    </span>
+                </h2>
+                <p class="hero-description">
+                    Seasoned Java Developer with a proven track record in architecting
+                    enterprise systems that serve thousands of users. Specialized in
+                    performance optimization, large-scale data processing, and delivering
+                    production-grade solutions under real-world constraints.
+                </p>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn btn-primary">
+                        <span>View My Work</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#contact" class="btn btn-outline">
+                        <span>Get In Touch</span>
+                    </a>
+                </div>
+                <div class="hero-social">
+                    <a href="https://github.com/quanla93" target="_blank" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/quanla-work" target="_blank" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="mailto:quanla.work@gmail.com" class="social-link" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    <a href="tel:+84968890557" class="social-link" aria-label="Phone"><i class="fas fa-phone"></i></a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="code-window">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="code-title">Developer.java</span>
+                    </div>
+                    <div class="code-body">
+                        <pre><code><span class="code-keyword">public class</span> <span class="code-class">Developer</span> <span class="code-keyword">implements</span> <span class="code-class">Craftsman</span> {
+
+    <span class="code-keyword">private final</span> String name = <span class="code-string">"Le Anh Quan"</span>;
+    <span class="code-keyword">private final</span> String role = <span class="code-string">"Java Developer"</span>;
+    <span class="code-keyword">private final int</span> yearsOfExp = <span class="code-string">4</span>;
+    <span class="code-keyword">private final</span> List&lt;String&gt; expertise = List.of(
+        <span class="code-string">"Enterprise Architecture"</span>,
+        <span class="code-string">"Performance Tuning"</span>,
+        <span class="code-string">"Large-scale Data Processing"</span>
+    );
+
+    <span class="code-keyword">@Override</span>
+    <span class="code-keyword">public</span> Impact <span class="code-method">deliver</span>() {
+        <span class="code-keyword">return new</span> Impact(<span class="code-string">"100M+ records<br>            optimized, 50%+ faster"</span>);
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="mouse-wheel"></div>
+            </div>
+            <span>Scroll Down</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="container">
+            <h2 class="section-title" data-aos>
+                <span class="title-number">01.</span> About Me
+            </h2>
+            <div class="about-grid">
+                <div class="about-text" data-aos>
+                    <p>
+                        I'm a <strong>Java Developer</strong> at <strong>BHSoft</strong> with 4+ years
+                        of progressive experience delivering enterprise solutions for international clients
+                        across Europe and Asia. I've evolved from an intern to a key contributor
+                        responsible for designing core system components that directly impact product
+                        performance and user experience at scale.
+                    </p>
+                    <p>
+                        My core strength lies in <strong>performance engineering</strong> and
+                        <strong>data-intensive systems</strong>. I've architected caching layers handling
+                        millions of transactional records, designed stored procedures that slashed query
+                        times by 30%, and built reporting engines processing <strong>100M+ records</strong>
+                        with 50%+ speed improvements. I work across the full stack with
+                        <strong>Java EE</strong>, <strong>Spring Boot</strong>, and <strong>Vaadin</strong>,
+                        but my deepest expertise is in backend architecture and database optimization.
+                    </p>
+                    <p>
+                        Holding a <strong>B.Sc. in Software Technology</strong> from FPT University and
+                        certifications in <strong>Google Project Management</strong> and
+                        <strong>UX Research & Design</strong>, I bring both technical depth and a
+                        product-oriented mindset. I don't just write code that works — I engineer
+                        solutions that scale, perform, and stand the test of production.
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="4">0</span>
+                            <span class="stat-suffix">+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="3">0</span>
+                            <span class="stat-suffix">+</span>
+                            <span class="stat-label">Enterprise Projects</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="100">0</span>
+                            <span class="stat-suffix">M+</span>
+                            <span class="stat-label">Records Optimized</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image" data-aos>
+                    <div class="image-wrapper">
+                        <img src="QuânLA.png" alt="Le Anh Quan - Java Developer" class="profile-photo">
+                        <div class="image-border"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section skills">
+        <div class="container">
+            <h2 class="section-title" data-aos>
+                <span class="title-number">02.</span> Skills & Technologies
+            </h2>
+            <div class="skills-grid">
+                <div class="skill-category" data-aos>
+                    <div class="category-icon"><i class="fas fa-code"></i></div>
+                    <h3>Languages & Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Java EE</span>
+                        <span class="skill-tag">C#</span>
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">Vaadin</span>
+                        <span class="skill-tag">ASP.NET</span>
+                        <span class="skill-tag">Java Servlet</span>
+                        <span class="skill-tag">RESTful APIs</span>
+                    </div>
+                </div>
+                <div class="skill-category" data-aos>
+                    <div class="category-icon"><i class="fas fa-database"></i></div>
+                    <h3>Database & Storage</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">SQL Server</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">Stored Procedures</span>
+                        <span class="skill-tag">Query Optimization</span>
+                    </div>
+                </div>
+                <div class="skill-category" data-aos>
+                    <div class="category-icon"><i class="fas fa-server"></i></div>
+                    <h3>DevOps & Infrastructure</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">ArgoCD</span>
+                        <span class="skill-tag">CI/CD Pipelines</span>
+                        <span class="skill-tag">Proxmox VE</span>
+                        <span class="skill-tag">Linux Server</span>
+                        <span class="skill-tag">Azure DevOps</span>
+                        <span class="skill-tag">GitHub Actions</span>
+                        <span class="skill-tag">Keycloak</span>
+                        <span class="skill-tag">SonarQube</span>
+                    </div>
+                </div>
+                <div class="skill-category" data-aos>
+                    <div class="category-icon"><i class="fas fa-tools"></i></div>
+                    <h3>Version Control & Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">GitHub</span>
+                        <span class="skill-tag">GitLab</span>
+                        <span class="skill-tag">SVN</span>
+                        <span class="skill-tag">Jira</span>
+                        <span class="skill-tag">Gradle</span>
+                        <span class="skill-tag">Maven</span>
+                    </div>
+                </div>
+                <div class="skill-category" data-aos>
+                    <div class="category-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Soft Skills & Others</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Problem Solving</span>
+                        <span class="skill-tag">Teamwork</span>
+                        <span class="skill-tag">English (TOEIC 680)</span>
+                        <span class="skill-tag">Self-learning</span>
+                        <span class="skill-tag">Attention to Detail</span>
+                        <span class="skill-tag">Agile/Scrum</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section experience">
+        <div class="container">
+            <h2 class="section-title" data-aos>
+                <span class="title-number">03.</span> Experience
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item" data-aos>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Full-Stack Java Developer</h3>
+                            <span class="timeline-company">@ BHSoft</span>
+                        </div>
+                        <span class="timeline-date">Jul 2023 - Present</span>
+                        <p class="timeline-project">JAMIX - Enterprise Kitchen Management (Large-scale Production System)</p>
+                        <ul class="timeline-details">
+                            <li>Designed and implemented a multi-layered caching architecture for menu pricing data, handling complex hierarchical structures (meals > recipes > ingredients > stock cards) across repeating weekly/monthly cycles — resolving a critical performance bottleneck in the production system</li>
+                            <li>Engineered stored procedures with smart invalidation logic that cache prices at the menu-row level and refresh only on cycle transitions, reducing data retrieval latency by 20-30% and eliminating redundant recalculations</li>
+                            <li>Architected a high-throughput reporting engine generating Excel/PDF exports for stock events (withdrawal, order, delivery, wastage) across 100M+ records — leveraging indexing strategies and table partitioning to cut report generation time by over 50%</li>
+                            <li>Serve as a primary developer for end-to-end feature delivery, from requirements analysis through Jira to production deployment, while maintaining and stabilizing the legacy codebase</li>
+                        </ul>
+                        <div class="timeline-tech">
+                            <span>Java EE</span><span>Vaadin</span><span>Java Servlet</span><span>SQL Server</span><span>Azure DevOps</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Back-End Java Developer</h3>
+                            <span class="timeline-company">@ BHSoft</span>
+                        </div>
+                        <span class="timeline-date">Jan 2022 - Jul 2023</span>
+                        <p class="timeline-project">ARPV - European Vehicle Recycling Compliance Platform</p>
+                        <ul class="timeline-details">
+                            <li>Re-engineered the vehicle part classification algorithm by applying LIFO/FIFO data structures, achieving a 20% throughput improvement while ensuring full compliance with ISO:22628:2002 recycling standards</li>
+                            <li>Led the migration of a legacy monolith to a modern Spring Boot architecture with Keycloak-based authentication, containerized via Docker for streamlined deployment</li>
+                            <li>Designed and built RESTful APIs powering the core recycling rate calculation engine used by European automotive recycling facilities</li>
+                            <li>Collaborated directly with European clients to translate business requirements into technical specifications and delivered iteratively under Agile methodology</li>
+                        </ul>
+                        <div class="timeline-tech">
+                            <span>Java EE</span><span>Spring Boot</span><span>Keycloak</span><span>Docker</span><span>PostgreSQL</span><span>REST API</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Java Developer (started as Intern)</h3>
+                            <span class="timeline-company">@ BHSoft</span>
+                        </div>
+                        <span class="timeline-date">Jul 2021 - Dec 2022</span>
+                        <p class="timeline-project">DUCCIO - B2B Tailoring & Supply Chain Platform</p>
+                        <ul class="timeline-details">
+                            <li>Rapidly promoted from intern to developer within 5 months by demonstrating strong initiative in refactoring critical modules for improved performance and reliability</li>
+                            <li>Built a full-featured article management and commenting system using ASP.NET, expanding the platform's content capabilities for business users</li>
+                            <li>Worked across dual tech stacks (Java/Spring Boot + C#/ASP.NET), gaining versatile full-stack experience in a production environment</li>
+                            <li>Established a systematic approach to bug documentation and resolution, creating reusable solution templates adopted by the team</li>
+                        </ul>
+                        <div class="timeline-tech">
+                            <span>Java EE</span><span>Spring Boot</span><span>ASP.NET</span><span>C#</span><span>Docker</span><span>PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects">
+        <div class="container">
+            <h2 class="section-title" data-aos>
+                <span class="title-number">04.</span> Featured Projects
+            </h2>
+            <div class="projects-grid">
+                <div class="project-card" data-aos>
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-badge">Team of 10 | Production System</div>
+                        <h3>JAMIX - Enterprise Kitchen Management</h3>
+                        <p>Mission-critical platform serving a large-scale user base across corporations, schools, and institutions. Designed caching architecture for complex meal pricing across 100M+ records and built a high-throughput reporting engine that cut export time by 50%+. Directly responsible for core performance-sensitive modules.</p>
+                        <div class="project-tech">
+                            <span>Java EE</span>
+                            <span>Vaadin</span>
+                            <span>SQL Server</span>
+                            <span>Stored Procedures</span>
+                            <span>Azure DevOps</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-aos>
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-badge">Team of 6 | EU Compliance</div>
+                        <h3>ARPV - Vehicle Recycling Compliance</h3>
+                        <p>ISO-compliant platform for European automotive recyclers to optimize vehicle dismantling and calculate recycling rates. Re-engineered the classification algorithm with advanced data structures, achieving 20% faster processing while meeting ISO:22628:2002 standards.</p>
+                        <div class="project-tech">
+                            <span>Spring Boot</span>
+                            <span>PostgreSQL</span>
+                            <span>Keycloak</span>
+                            <span>Docker</span>
+                            <span>REST API</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-aos>
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <i class="fas fa-cut"></i>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-badge">Team of 6 | Dual-stack</div>
+                        <h3>DUCCIO - B2B Tailoring Platform</h3>
+                        <p>Supply chain platform connecting tailors and material suppliers for custom order fulfillment. Operated across Java and C#/.NET stacks, owning the article management module and building collaborative features that streamlined the order workflow.</p>
+                        <div class="project-tech">
+                            <span>Spring Boot</span>
+                            <span>ASP.NET</span>
+                            <span>C#</span>
+                            <span>PostgreSQL</span>
+                            <span>Docker</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title" data-aos>Open Source & Personal Projects</h3>
+            <div class="projects-grid">
+                <div class="project-card" data-aos>
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://github.com/quanla93/spring-demo-argocd" target="_blank" class="project-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-badge">Personal | CI/CD</div>
+                        <h3>Spring Boot + ArgoCD Pipeline</h3>
+                        <p>End-to-end CI/CD demo integrating Spring Boot with ArgoCD for GitOps-based continuous deployment. Containerized with Docker and automated via GitHub Actions workflows.</p>
+                        <div class="project-tech">
+                            <span>Java</span>
+                            <span>Spring Boot</span>
+                            <span>ArgoCD</span>
+                            <span>Docker</span>
+                            <span>GitHub Actions</span>
+                            <span>Gradle</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-aos>
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://github.com/quanla93/Catenax-connector" target="_blank" class="project-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-badge">Personal | Data Exchange</div>
+                        <h3>Catena-X Connector</h3>
+                        <p>Java-based connector for the Catena-X automotive data ecosystem — enabling secure, standardized data exchange between automotive industry partners through the European collaborative data framework.</p>
+                        <div class="project-tech">
+                            <span>Java</span>
+                            <span>Docker</span>
+                            <span>Catena-X</span>
+                            <span>Data Connector</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-aos>
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://github.com/SEP490G24/vms-server" target="_blank" class="project-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-badge">Contributor | Full-stack</div>
+                        <h3>VMS - Vehicle Management System</h3>
+                        <p>Production-ready vehicle management server with TLS security, permission management, and containerized deployment. Includes SonarQube integration for code quality and full Docker Compose orchestration.</p>
+                        <div class="project-tech">
+                            <span>Java</span>
+                            <span>Maven</span>
+                            <span>Docker Compose</span>
+                            <span>SonarQube</span>
+                            <span>TLS/Security</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title" data-aos>
+                <span class="title-number">05.</span> Get In Touch
+            </h2>
+            <div class="contact-content" data-aos>
+                <p class="contact-text">
+                    I'm always excited to connect with fellow developers, potential collaborators,
+                    and companies looking for a dedicated Java developer. Whether you have a project
+                    in mind or just want to chat about tech, feel free to reach out!
+                </p>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder=" " required>
+                            <label for="name">Your Name</label>
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder=" " required>
+                            <label for="email">Your Email</label>
+                            <div class="form-line"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="subject" placeholder=" " required>
+                        <label for="subject">Subject</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" rows="5" placeholder=" " required></textarea>
+                        <label for="message">Message</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <span>Send Message</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+                <div class="contact-alternatives">
+                    <p>Or reach me directly at</p>
+                    <div class="contact-links">
+                        <a href="mailto:quanla.work@gmail.com" class="contact-link">
+                            <i class="fas fa-envelope"></i>
+                            <span>quanla.work@gmail.com</span>
+                        </a>
+                        <a href="https://linkedin.com/in/quanla-work" target="_blank" class="contact-link">
+                            <i class="fab fa-linkedin-in"></i>
+                            <span>linkedin.com/in/quanla-work</span>
+                        </a>
+                        <a href="tel:+84968890557" class="contact-link">
+                            <i class="fas fa-phone"></i>
+                            <span>+84 968 890 557</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>Designed & Built by <strong>Le Anh Quan</strong></p>
+                <p class="footer-sub">
+                    <i class="fas fa-code"></i> with
+                    <i class="fas fa-heart" style="color: #ef4444;"></i> and
+                    <i class="fas fa-coffee" style="color: #f59e0b;"></i>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
