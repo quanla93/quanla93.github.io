@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to JSON Converter | Le Anh Quan Tools</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #16161e;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-2: #06b6d4;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .toolbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--accent-light); }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-secondary);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            border-color: var(--accent-light);
+        }
+
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            height: calc(100vh - 60px);
+        }
+
+        .editor-panel {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+        }
+
+        .editor-panel:last-child { border-right: none; }
+
+        .panel-header {
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .panel-info {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        textarea {
+            flex: 1;
+            padding: 16px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: none;
+            resize: none;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        textarea::placeholder { color: var(--text-muted); }
+
+        .output-area {
+            flex: 1;
+            padding: 16px;
+            background: var(--bg-primary);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.6;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .options-bar {
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .option-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .option-group select, .option-group input[type="text"] {
+            padding: 4px 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            outline: none;
+        }
+
+        .option-group input[type="checkbox"] {
+            accent-color: var(--accent);
+        }
+
+        .error-text { color: #ef4444; }
+        .success-text { color: #22c55e; }
+
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin: 16px;
+            transition: all 0.2s;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.05);
+            color: var(--accent-light);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast-success { background: #22c55e; color: white; }
+        .toast-error { background: #ef4444; color: white; }
+
+        @media (max-width: 768px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+            .editor-panel { border-right: none; border-bottom: 1px solid var(--border); }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <a href="../../" class="back-link">&larr; Portfolio</a>
+            <h1>CSV to JSON</h1>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="loadSample()">Sample</button>
+            <button class="btn" onclick="document.getElementById('fileInput').click()">Upload CSV</button>
+            <input type="file" id="fileInput" accept=".csv,.tsv,.txt" style="display:none">
+            <button class="btn-primary btn" onclick="convert()">Convert &rarr;</button>
+            <button class="btn" onclick="copyOutput()">Copy JSON</button>
+            <button class="btn" onclick="downloadJSON()">Download</button>
+            <button class="btn" onclick="clearAll()">Clear</button>
+        </div>
+    </div>
+
+    <div class="options-bar">
+        <div class="option-group">
+            <label>Delimiter:</label>
+            <select id="delimiter">
+                <option value=",">, (comma)</option>
+                <option value="&#9;">Tab</option>
+                <option value=";">; (semicolon)</option>
+                <option value="|">| (pipe)</option>
+            </select>
+        </div>
+        <div class="option-group">
+            <label>Indent:</label>
+            <select id="indent">
+                <option value="2">2 spaces</option>
+                <option value="4">4 spaces</option>
+                <option value="tab">Tab</option>
+                <option value="0">Minified</option>
+            </select>
+        </div>
+        <div class="option-group">
+            <input type="checkbox" id="firstRowHeader" checked>
+            <label for="firstRowHeader">First row as header</label>
+        </div>
+        <div class="option-group">
+            <input type="checkbox" id="trimValues" checked>
+            <label for="trimValues">Trim values</label>
+        </div>
+    </div>
+
+    <div class="editor-container">
+        <div class="editor-panel">
+            <div class="panel-header">
+                <span class="panel-title">CSV Input</span>
+                <span class="panel-info" id="csvInfo">0 rows</span>
+            </div>
+            <textarea id="csvInput" placeholder="Paste your CSV data here, or drag & drop a .csv file..."></textarea>
+        </div>
+        <div class="editor-panel">
+            <div class="panel-header">
+                <span class="panel-title">JSON Output</span>
+                <span class="panel-info" id="jsonInfo">0 objects</span>
+            </div>
+            <div class="output-area" id="jsonOutput">JSON output will appear here...</div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const csvInput = document.getElementById('csvInput');
+        const jsonOutput = document.getElementById('jsonOutput');
+        const csvInfo = document.getElementById('csvInfo');
+        const jsonInfo = document.getElementById('jsonInfo');
+        const fileInput = document.getElementById('fileInput');
+
+        // Auto-convert on input
+        csvInput.addEventListener('input', debounce(convert, 300));
+
+        // File upload
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                csvInput.value = ev.target.result;
+                convert();
+            };
+            reader.readAsText(file);
+        });
+
+        // Drag & drop
+        csvInput.addEventListener('dragover', (e) => { e.preventDefault(); csvInput.style.borderColor = 'var(--accent)'; });
+        csvInput.addEventListener('dragleave', () => { csvInput.style.borderColor = ''; });
+        csvInput.addEventListener('drop', (e) => {
+            e.preventDefault();
+            csvInput.style.borderColor = '';
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { csvInput.value = ev.target.result; convert(); };
+                reader.readAsText(file);
+            }
+        });
+
+        function parseCSV(text, delimiter) {
+            const rows = [];
+            let current = '';
+            let inQuotes = false;
+            let row = [];
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const next = text[i + 1];
+
+                if (inQuotes) {
+                    if (char === '"' && next === '"') {
+                        current += '"';
+                        i++;
+                    } else if (char === '"') {
+                        inQuotes = false;
+                    } else {
+                        current += char;
+                    }
+                } else {
+                    if (char === '"') {
+                        inQuotes = true;
+                    } else if (char === delimiter) {
+                        row.push(current);
+                        current = '';
+                    } else if (char === '\r' && next === '\n') {
+                        row.push(current);
+                        current = '';
+                        rows.push(row);
+                        row = [];
+                        i++;
+                    } else if (char === '\n') {
+                        row.push(current);
+                        current = '';
+                        rows.push(row);
+                        row = [];
+                    } else {
+                        current += char;
+                    }
+                }
+            }
+
+            row.push(current);
+            if (row.some(cell => cell !== '')) rows.push(row);
+
+            return rows;
+        }
+
+        function convert() {
+            const text = csvInput.value.trim();
+            if (!text) {
+                jsonOutput.textContent = 'JSON output will appear here...';
+                jsonOutput.style.color = 'var(--text-muted)';
+                csvInfo.textContent = '0 rows';
+                jsonInfo.textContent = '0 objects';
+                return;
+            }
+
+            try {
+                const delimiter = document.getElementById('delimiter').value;
+                const useHeader = document.getElementById('firstRowHeader').checked;
+                const trimVals = document.getElementById('trimValues').checked;
+                const indentVal = document.getElementById('indent').value;
+
+                const indent = indentVal === 'tab' ? '\t' : (indentVal === '0' ? undefined : parseInt(indentVal));
+
+                const rows = parseCSV(text, delimiter);
+                if (rows.length === 0) throw new Error('No data found');
+
+                csvInfo.textContent = `${rows.length} rows`;
+
+                let result;
+                if (useHeader && rows.length > 1) {
+                    const headers = rows[0].map(h => trimVals ? h.trim() : h);
+                    result = rows.slice(1).map(row => {
+                        const obj = {};
+                        headers.forEach((header, i) => {
+                            let val = row[i] !== undefined ? row[i] : '';
+                            if (trimVals) val = val.trim();
+                            // Auto-detect types
+                            if (val === '') obj[header] = null;
+                            else if (val === 'true') obj[header] = true;
+                            else if (val === 'false') obj[header] = false;
+                            else if (!isNaN(val) && val !== '') obj[header] = Number(val);
+                            else obj[header] = val;
+                        });
+                        return obj;
+                    });
+                } else {
+                    result = rows.map(row => row.map(cell => {
+                        let val = trimVals ? cell.trim() : cell;
+                        if (val === '') return null;
+                        if (val === 'true') return true;
+                        if (val === 'false') return false;
+                        if (!isNaN(val) && val !== '') return Number(val);
+                        return val;
+                    }));
+                }
+
+                const json = JSON.stringify(result, null, indent);
+                jsonOutput.textContent = json;
+                jsonOutput.style.color = 'var(--text-primary)';
+                jsonInfo.textContent = `${result.length} objects`;
+                jsonInfo.className = 'panel-info success-text';
+            } catch (err) {
+                jsonOutput.textContent = 'Error: ' + err.message;
+                jsonOutput.style.color = '#ef4444';
+                jsonInfo.textContent = 'Error';
+                jsonInfo.className = 'panel-info error-text';
+            }
+        }
+
+        function loadSample() {
+            csvInput.value = `name,age,email,active
+John Doe,30,john@example.com,true
+Jane Smith,25,jane@example.com,true
+Bob Wilson,45,bob@example.com,false
+Alice Brown,28,alice@example.com,true`;
+            convert();
+        }
+
+        function copyOutput() {
+            const text = jsonOutput.textContent;
+            if (!text || text.startsWith('JSON output') || text.startsWith('Error')) return;
+            navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!', 'success'));
+        }
+
+        function downloadJSON() {
+            const text = jsonOutput.textContent;
+            if (!text || text.startsWith('JSON output') || text.startsWith('Error')) return;
+            const blob = new Blob([text], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Downloaded data.json', 'success');
+        }
+
+        function clearAll() {
+            csvInput.value = '';
+            jsonOutput.textContent = 'JSON output will appear here...';
+            jsonOutput.style.color = 'var(--text-muted)';
+            csvInfo.textContent = '0 rows';
+            jsonInfo.textContent = '0 objects';
+            jsonInfo.className = 'panel-info';
+        }
+
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast toast-${type} show`;
+            setTimeout(() => toast.className = 'toast', 2500);
+        }
+
+        function debounce(fn, delay) {
+            let timer;
+            return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
+        }
+
+        // Listen for option changes
+        document.querySelectorAll('.options-bar select, .options-bar input').forEach(el => {
+            el.addEventListener('change', convert);
+        });
+    </script>
+</body>
+</html>

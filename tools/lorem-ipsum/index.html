@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorem Ipsum Generator | Le Anh Quan Tools</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #16161e;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-2: #06b6d4;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .toolbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--accent-light); }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            max-width: 800px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .control-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .control-group select,
+        .control-group input[type="number"] {
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .control-group select:focus,
+        .control-group input:focus {
+            border-color: var(--accent);
+        }
+
+        .char-limit-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .char-limit-row input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        .char-limit-row label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .char-limit-row input[type="number"] {
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 14px;
+            outline: none;
+            width: 120px;
+            transition: border-color 0.2s;
+        }
+
+        .char-limit-row input[type="number"]:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-secondary);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            border-color: var(--accent-light);
+        }
+
+        .output-section {
+            max-width: 800px;
+            margin: 0 auto 32px;
+            padding: 0 24px;
+        }
+
+        .output-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .output-header {
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .output-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .output-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .stat strong {
+            color: var(--accent-light);
+        }
+
+        .output-body {
+            padding: 20px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .output-body p { margin-bottom: 16px; }
+        .output-body p:last-child { margin-bottom: 0; }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #22c55e;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .control-row { flex-direction: column; }
+            .control-group { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <a href="../../" class="back-link">&larr; Portfolio</a>
+            <h1>Lorem Ipsum Generator</h1>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control-card">
+            <div class="control-row">
+                <div class="control-group">
+                    <label>Type</label>
+                    <select id="genType">
+                        <option value="paragraphs">Paragraphs</option>
+                        <option value="sentences">Sentences</option>
+                        <option value="words">Words</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Amount</label>
+                    <input type="number" id="genAmount" value="3" min="1" max="100">
+                </div>
+                <div class="control-group">
+                    <label>Variant</label>
+                    <select id="genVariant">
+                        <option value="classic">Classic Latin</option>
+                        <option value="hipster">Hipster</option>
+                        <option value="tech">Tech/Dev</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="char-limit-row">
+                <input type="checkbox" id="charLimitEnabled">
+                <label for="charLimitEnabled">Limit characters:</label>
+                <input type="number" id="charLimit" value="500" min="10" max="100000" disabled>
+                <span style="font-size:12px;color:var(--text-muted)">characters</span>
+            </div>
+
+            <div class="char-limit-row" style="margin-bottom:20px">
+                <input type="checkbox" id="startWithLorem" checked>
+                <label for="startWithLorem">Start with "Lorem ipsum dolor sit amet..."</label>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="generate()">Generate</button>
+                <button class="btn" onclick="copyText()">Copy Text</button>
+                <button class="btn" onclick="copyHTML()">Copy as HTML</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="output-section">
+        <div class="output-card">
+            <div class="output-header">
+                <span class="output-title">Generated Text</span>
+                <div class="output-stats">
+                    <span class="stat">Chars: <strong id="charCount">0</strong></span>
+                    <span class="stat">Words: <strong id="wordCount">0</strong></span>
+                    <span class="stat">Sentences: <strong id="sentCount">0</strong></span>
+                </div>
+            </div>
+            <div class="output-body" id="output">
+                <p style="color:var(--text-muted)">Click "Generate" to create lorem ipsum text...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const WORDS = {
+            classic: [
+                'lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do',
+                'eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim',
+                'ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi',
+                'aliquip','ex','ea','commodo','consequat','duis','aute','irure','in','reprehenderit',
+                'voluptate','velit','esse','cillum','fugiat','nulla','pariatur','excepteur','sint',
+                'occaecat','cupidatat','non','proident','sunt','culpa','qui','officia','deserunt',
+                'mollit','anim','id','est','laborum','blandit','volutpat','maecenas','accumsan',
+                'lacus','vel','facilisis','volutpat','viverra','justo','nec','ultrices','dui','sapien',
+                'eget','mi','proin','gravida','hendrerit','lectus','vestibulum','mattis','ullamcorper',
+                'velit','elementum','sagittis','vitae','tortor','condimentum','lacinia','quis',
+                'pellentesque','habitant','morbi','tristique','senectus','netus','malesuada','fames',
+                'turpis','egestas','integer','feugiat','scelerisque','varius','morbi','enim','nunc',
+                'faucibus','pulvinar','porttitor','rhoncus','semper','auctor','neque','sodales'
+            ],
+            hipster: [
+                'artisan','craft','vintage','sustainable','organic','bespoke','curated','minimal',
+                'aesthetic','authentic','handcrafted','boutique','ethically','sourced','cold-brew',
+                'kombucha','avocado','toast','brunch','vinyl','record','thrift','flannel','mason',
+                'jar','typewriter','polaroid','fixie','bicycle','rooftop','garden','meditation',
+                'mindful','yoga','retreat','sourdough','fermented','locally','grown','farm-to-table',
+                'micro-batch','small-batch','single-origin','fair-trade','zero-waste','upcycled',
+                'reclaimed','bohemian','wanderlust','nomadic','free-spirited','eclectic','rustic',
+                'industrial','loft','exposed','brick','terrazzo','rattan','macrame','ceramic',
+                'pottery','workshop','creative','studio','co-working','space','community'
+            ],
+            tech: [
+                'algorithm','API','backend','blockchain','cache','cloud','component','container',
+                'database','deploy','docker','endpoint','framework','frontend','function','git',
+                'handler','HTTP','infrastructure','interface','JSON','kubernetes','lambda','latency',
+                'microservice','middleware','module','node','npm','object','pipeline','protocol',
+                'query','React','repository','REST','runtime','scalable','schema','server',
+                'serverless','sprint','stack','state','stream','syntax','terminal','thread',
+                'token','typescript','UI','unit-test','variable','version','virtual','webpack',
+                'websocket','worker','YAML','zero-downtime','agile','refactor','debug','compile',
+                'async','await','promise','callback','middleware','payload','throughput','bandwidth'
+            ]
+        };
+
+        const LOREM_START = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
+
+        const charLimitCheckbox = document.getElementById('charLimitEnabled');
+        const charLimitInput = document.getElementById('charLimit');
+        charLimitCheckbox.addEventListener('change', () => {
+            charLimitInput.disabled = !charLimitCheckbox.checked;
+        });
+
+        function pickRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function generateSentence(words) {
+            const len = 6 + Math.floor(Math.random() * 12);
+            const parts = [];
+            for (let i = 0; i < len; i++) {
+                parts.push(pickRandom(words));
+            }
+            // Add comma sometimes
+            if (len > 8) {
+                const commaPos = 3 + Math.floor(Math.random() * (len - 5));
+                parts[commaPos] = parts[commaPos] + ',';
+            }
+            return capitalize(parts.join(' ')) + '.';
+        }
+
+        function generateParagraph(words) {
+            const sentCount = 3 + Math.floor(Math.random() * 5);
+            const sentences = [];
+            for (let i = 0; i < sentCount; i++) {
+                sentences.push(generateSentence(words));
+            }
+            return sentences.join(' ');
+        }
+
+        function generate() {
+            const type = document.getElementById('genType').value;
+            const amount = parseInt(document.getElementById('genAmount').value) || 3;
+            const variant = document.getElementById('genVariant').value;
+            const startWithLorem = document.getElementById('startWithLorem').checked;
+            const limitEnabled = charLimitCheckbox.checked;
+            const charLimitVal = parseInt(charLimitInput.value) || 500;
+
+            const words = WORDS[variant];
+            let paragraphs = [];
+            let text = '';
+
+            if (type === 'paragraphs') {
+                for (let i = 0; i < amount; i++) {
+                    let p = generateParagraph(words);
+                    if (i === 0 && startWithLorem && variant === 'classic') {
+                        p = LOREM_START + p;
+                    }
+                    paragraphs.push(p);
+                }
+                text = paragraphs.join('\n\n');
+            } else if (type === 'sentences') {
+                const sentences = [];
+                for (let i = 0; i < amount; i++) {
+                    sentences.push(generateSentence(words));
+                }
+                if (startWithLorem && variant === 'classic') {
+                    sentences[0] = LOREM_START.trim();
+                }
+                text = sentences.join(' ');
+                paragraphs = [text];
+            } else {
+                const picked = [];
+                for (let i = 0; i < amount; i++) {
+                    picked.push(pickRandom(words));
+                }
+                if (startWithLorem && variant === 'classic') {
+                    picked[0] = 'lorem';
+                    if (amount > 1) picked[1] = 'ipsum';
+                    if (amount > 2) picked[2] = 'dolor';
+                }
+                text = picked.join(' ');
+                paragraphs = [text];
+            }
+
+            // Apply character limit
+            if (limitEnabled && text.length > charLimitVal) {
+                text = text.substring(0, charLimitVal);
+                // Clean up: don't cut in the middle of a word
+                const lastSpace = text.lastIndexOf(' ');
+                if (lastSpace > charLimitVal * 0.8) {
+                    text = text.substring(0, lastSpace);
+                }
+                // Rebuild paragraphs for display
+                paragraphs = text.split('\n\n');
+            }
+
+            // Render
+            const output = document.getElementById('output');
+            output.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
+
+            // Stats
+            document.getElementById('charCount').textContent = text.length.toLocaleString();
+            document.getElementById('wordCount').textContent = text.split(/\s+/).filter(Boolean).length.toLocaleString();
+            document.getElementById('sentCount').textContent = (text.match(/[.!?]+/g) || []).length;
+        }
+
+        function getPlainText() {
+            const output = document.getElementById('output');
+            return Array.from(output.querySelectorAll('p')).map(p => p.textContent).join('\n\n');
+        }
+
+        function getHTMLText() {
+            const output = document.getElementById('output');
+            return Array.from(output.querySelectorAll('p')).map(p => `<p>${p.textContent}</p>`).join('\n');
+        }
+
+        function copyText() {
+            const text = getPlainText();
+            if (!text || text.includes('Click "Generate"')) return;
+            navigator.clipboard.writeText(text).then(() => showToast('Copied plain text!'));
+        }
+
+        function copyHTML() {
+            const html = getHTMLText();
+            if (!html || html.includes('Click "Generate"')) return;
+            navigator.clipboard.writeText(html).then(() => showToast('Copied as HTML!'));
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Generate on load
+        generate();
+    </script>
+</body>
+</html>
