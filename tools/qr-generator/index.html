@@ -418,10 +418,10 @@
                     <div class="option-inline">
                         <label style="font-size:11px;color:var(--text-muted)">Logo size:</label>
                         <select id="logoSize" style="width:auto;padding:4px 8px;font-size:12px">
-                            <option value="0.15">Small (15%)</option>
-                            <option value="0.20" selected>Medium (20%)</option>
-                            <option value="0.25">Large (25%)</option>
-                            <option value="0.30">Extra (30%)</option>
+                            <option value="0.10">Small (10%)</option>
+                            <option value="0.15" selected>Medium (15%)</option>
+                            <option value="0.20">Large (20%)</option>
+                            <option value="0.25">Extra (25%)</option>
                         </select>
                     </div>
                     <div class="option-inline" style="margin-top:6px">
@@ -927,7 +927,7 @@
         }
 
         function toCanvas(canvas, text, options = {}) {
-            const { ecLevel = 'M', size: pixelSize = 300, fg = '#000000', bg = '#FFFFFF' } = options;
+            const { ecLevel = 'M', size: pixelSize = 300, fg = '#000000', bg = '#FFFFFF', excludeRatio = 0 } = options;
             const { matrix, size } = generate(text, ecLevel);
 
             const quiet = 4;
@@ -941,9 +941,21 @@
             ctx.fillStyle = bg;
             ctx.fillRect(0, 0, pixelSize, pixelSize);
 
+            // Calculate center exclusion zone in module coordinates
+            let exclMin = -1, exclMax = -1;
+            if (excludeRatio > 0) {
+                const exclModules = Math.ceil(size * excludeRatio);
+                const center = Math.floor(size / 2);
+                const half = Math.ceil(exclModules / 2);
+                exclMin = center - half;
+                exclMax = center + half;
+            }
+
             ctx.fillStyle = fg;
             for (let r = 0; r < size; r++) {
                 for (let c = 0; c < size; c++) {
+                    // Skip modules in the logo exclusion zone
+                    if (excludeRatio > 0 && r >= exclMin && r < exclMax && c >= exclMin && c < exclMax) continue;
                     if (matrix[r][c] === 1) {
                         ctx.fillRect(
                             Math.round((c + quiet) * scale),
@@ -1058,6 +1070,13 @@
             generateQR();
         }
 
+        function getLogoExcludeRatio() {
+            if (!logoImage) return 0;
+            const ratio = parseFloat(document.getElementById('logoSize').value);
+            // Add extra margin so no QR modules touch the logo edge
+            return ratio + 0.08;
+        }
+
         function drawLogoOnCanvas(canvas) {
             if (!logoImage) return;
             const ctx = canvas.getContext('2d');
@@ -1069,24 +1088,16 @@
             const x = (canvas.width - logoW) / 2;
             const y = (canvas.height - logoH) / 2;
 
+            // White border around logo for clean separation
             if (addBg) {
-                const pad = logoW * 0.12;
+                const pad = logoW * 0.15;
                 ctx.fillStyle = bgColor.value;
-                ctx.beginPath();
-                const r = pad * 0.8;
-                const bx = x - pad, by = y - pad, bw = logoW + pad * 2, bh = logoH + pad * 2;
-                ctx.moveTo(bx + r, by);
-                ctx.arcTo(bx + bw, by, bx + bw, by + bh, r);
-                ctx.arcTo(bx + bw, by + bh, bx, by + bh, r);
-                ctx.arcTo(bx, by + bh, bx, by, r);
-                ctx.arcTo(bx, by, bx + bw, by, r);
-                ctx.closePath();
-                ctx.fill();
+                ctx.fillRect(x - pad, y - pad, logoW + pad * 2, logoH + pad * 2);
             }
 
-            // Draw logo with rounded corners
+            // Draw logo with slight rounded corners
             ctx.save();
-            const logoR = logoW * 0.08;
+            const logoR = logoW * 0.06;
             ctx.beginPath();
             ctx.moveTo(x + logoR, y);
             ctx.arcTo(x + logoW, y, x + logoW, y + logoH, logoR);
@@ -1106,12 +1117,16 @@
             try {
                 const size = parseInt(document.getElementById('qrSize').value);
                 const ec = document.getElementById('qrEC').value;
+                // When logo present, render at minimum 600px for better module clarity
+                const renderSize = logoImage ? Math.max(size, 600) : size;
+                const excludeRatio = getLogoExcludeRatio();
 
                 QRCode.toCanvas(qrCanvas, text, {
                     ecLevel: ec,
-                    size: size,
+                    size: renderSize,
                     fg: fgColor.value,
-                    bg: bgColor.value
+                    bg: bgColor.value,
+                    excludeRatio: excludeRatio
                 });
 
                 drawLogoOnCanvas(qrCanvas);
@@ -1125,49 +1140,18 @@
             if (!text) return;
 
             if (format === 'png') {
-                // Re-render at full resolution for download
                 const size = parseInt(document.getElementById('qrSize').value);
                 const tmpCanvas = document.createElement('canvas');
+                const excludeRatio = getLogoExcludeRatio();
                 QRCode.toCanvas(tmpCanvas, text, {
                     ecLevel: document.getElementById('qrEC').value,
                     size: size,
                     fg: fgColor.value,
-                    bg: bgColor.value
+                    bg: bgColor.value,
+                    excludeRatio: excludeRatio
                 });
                 if (logoImage) {
-                    const ctx = tmpCanvas.getContext('2d');
-                    const ratio = parseFloat(document.getElementById('logoSize').value);
-                    const addBg = document.getElementById('logoBgWhite').checked;
-                    const logoW = tmpCanvas.width * ratio;
-                    const logoH = tmpCanvas.height * ratio;
-                    const x = (tmpCanvas.width - logoW) / 2;
-                    const y = (tmpCanvas.height - logoH) / 2;
-                    if (addBg) {
-                        const pad = logoW * 0.12;
-                        ctx.fillStyle = bgColor.value;
-                        ctx.beginPath();
-                        const r = pad * 0.8;
-                        const bx = x - pad, by = y - pad, bw = logoW + pad * 2, bh = logoH + pad * 2;
-                        ctx.moveTo(bx + r, by);
-                        ctx.arcTo(bx + bw, by, bx + bw, by + bh, r);
-                        ctx.arcTo(bx + bw, by + bh, bx, by + bh, r);
-                        ctx.arcTo(bx, by + bh, bx, by, r);
-                        ctx.arcTo(bx, by, bx + bw, by, r);
-                        ctx.closePath();
-                        ctx.fill();
-                    }
-                    ctx.save();
-                    const logoR = logoW * 0.08;
-                    ctx.beginPath();
-                    ctx.moveTo(x + logoR, y);
-                    ctx.arcTo(x + logoW, y, x + logoW, y + logoH, logoR);
-                    ctx.arcTo(x + logoW, y + logoH, x, y + logoH, logoR);
-                    ctx.arcTo(x, y + logoH, x, y, logoR);
-                    ctx.arcTo(x, y, x + logoW, y, logoR);
-                    ctx.closePath();
-                    ctx.clip();
-                    ctx.drawImage(logoImage, x, y, logoW, logoH);
-                    ctx.restore();
+                    drawLogoOnCanvas(tmpCanvas);
                 }
                 const link = document.createElement('a');
                 link.download = 'qrcode.png';
