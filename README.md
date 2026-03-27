@@ -2,7 +2,7 @@
 
 Personal portfolio website showcasing my experience as a Java Developer.
 
-**Live:** [quanla93.github.io/portfolio](https://quanla93.github.io/portfolio)
+**Live:** [quanla93.github.io](https://quanla93.github.io/)
 
 ## Tech Stack
 
