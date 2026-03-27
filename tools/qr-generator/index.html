@@ -241,6 +241,10 @@
         #qrCanvas {
             display: block;
             image-rendering: pixelated;
+            max-width: 260px;
+            max-height: 260px;
+            width: 100%;
+            height: auto;
         }
 
         .download-row {
@@ -248,6 +252,64 @@
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             width: 100%;
+        }
+
+        .logo-upload-area { margin-top: 4px; }
+
+        .logo-placeholder {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logo-placeholder:hover {
+            border-color: var(--accent);
+            color: var(--accent-light);
+        }
+
+        .logo-preview-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-preview-row img {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: white;
+            padding: 4px;
+        }
+
+        .btn-remove-logo {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-remove-logo:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .option-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .toast {
@@ -295,7 +357,7 @@
 
             <div class="input-group">
                 <label>Content</label>
-                <textarea id="qrText" placeholder="Enter text, URL, or data...">https://quanla93.github.io/portfolio</textarea>
+                <textarea id="qrText" placeholder="Enter text, URL, or data...">https://quanla93.github.io</textarea>
             </div>
 
             <div class="input-group">
@@ -338,6 +400,36 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="input-group">
+                <label>Logo / Image (optional)</label>
+                <div class="logo-upload-area" id="logoUploadArea">
+                    <input type="file" id="logoInput" accept="image/*" style="display:none">
+                    <div class="logo-placeholder" id="logoPlaceholder" onclick="document.getElementById('logoInput').click()">
+                        Click to upload logo
+                    </div>
+                    <div class="logo-preview-row" id="logoPreviewRow" style="display:none">
+                        <img id="logoPreview" src="" alt="Logo preview">
+                        <button class="btn-remove-logo" onclick="removeLogo()" title="Remove logo">&times;</button>
+                    </div>
+                </div>
+                <div class="logo-options" id="logoOptions" style="display:none;margin-top:8px">
+                    <div class="option-inline">
+                        <label style="font-size:11px;color:var(--text-muted)">Logo size:</label>
+                        <select id="logoSize" style="width:auto;padding:4px 8px;font-size:12px">
+                            <option value="0.15">Small (15%)</option>
+                            <option value="0.20" selected>Medium (20%)</option>
+                            <option value="0.25">Large (25%)</option>
+                            <option value="0.30">Extra (30%)</option>
+                        </select>
+                    </div>
+                    <div class="option-inline" style="margin-top:6px">
+                        <input type="checkbox" id="logoBgWhite" checked style="accent-color:var(--accent)">
+                        <label for="logoBgWhite" style="font-size:12px;color:var(--text-secondary)">White background padding</label>
+                    </div>
+                </div>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:6px">Tip: Use High (H) error correction for best logo results</p>
             </div>
 
             <button class="btn btn-primary" onclick="generateQR()">Generate QR Code</button>
@@ -897,7 +989,15 @@
         const qrCanvas = document.getElementById('qrCanvas');
         const fgColor = document.getElementById('fgColor');
         const bgColor = document.getElementById('bgColor');
+        const logoInput = document.getElementById('logoInput');
+        const logoPreview = document.getElementById('logoPreview');
+        const logoPlaceholder = document.getElementById('logoPlaceholder');
+        const logoPreviewRow = document.getElementById('logoPreviewRow');
+        const logoOptions = document.getElementById('logoOptions');
 
+        let logoImage = null;
+
+        // Auto-regenerate on any setting change
         fgColor.addEventListener('input', () => {
             document.getElementById('fgHex').textContent = fgColor.value.toUpperCase();
             generateQR();
@@ -906,6 +1006,45 @@
             document.getElementById('bgHex').textContent = bgColor.value.toUpperCase();
             generateQR();
         });
+        document.getElementById('qrSize').addEventListener('change', generateQR);
+        document.getElementById('qrEC').addEventListener('change', generateQR);
+        document.getElementById('logoSize').addEventListener('change', generateQR);
+        document.getElementById('logoBgWhite').addEventListener('change', generateQR);
+
+        // Logo upload
+        logoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    logoImage = img;
+                    logoPreview.src = ev.target.result;
+                    logoPlaceholder.style.display = 'none';
+                    logoPreviewRow.style.display = 'flex';
+                    logoOptions.style.display = 'block';
+                    // Auto-switch to High EC for better logo support
+                    const ecSelect = document.getElementById('qrEC');
+                    if (ecSelect.value !== 'H') {
+                        ecSelect.value = 'H';
+                        showToast('Switched to High error correction for logo');
+                    }
+                    generateQR();
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function removeLogo() {
+            logoImage = null;
+            logoInput.value = '';
+            logoPlaceholder.style.display = 'block';
+            logoPreviewRow.style.display = 'none';
+            logoOptions.style.display = 'none';
+            generateQR();
+        }
 
         function setPreset(type) {
             const templates = {
@@ -917,6 +1056,47 @@
             };
             qrText.value = templates[type] || '';
             generateQR();
+        }
+
+        function drawLogoOnCanvas(canvas) {
+            if (!logoImage) return;
+            const ctx = canvas.getContext('2d');
+            const ratio = parseFloat(document.getElementById('logoSize').value);
+            const addBg = document.getElementById('logoBgWhite').checked;
+
+            const logoW = canvas.width * ratio;
+            const logoH = canvas.height * ratio;
+            const x = (canvas.width - logoW) / 2;
+            const y = (canvas.height - logoH) / 2;
+
+            if (addBg) {
+                const pad = logoW * 0.12;
+                ctx.fillStyle = bgColor.value;
+                ctx.beginPath();
+                const r = pad * 0.8;
+                const bx = x - pad, by = y - pad, bw = logoW + pad * 2, bh = logoH + pad * 2;
+                ctx.moveTo(bx + r, by);
+                ctx.arcTo(bx + bw, by, bx + bw, by + bh, r);
+                ctx.arcTo(bx + bw, by + bh, bx, by + bh, r);
+                ctx.arcTo(bx, by + bh, bx, by, r);
+                ctx.arcTo(bx, by, bx + bw, by, r);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Draw logo with rounded corners
+            ctx.save();
+            const logoR = logoW * 0.08;
+            ctx.beginPath();
+            ctx.moveTo(x + logoR, y);
+            ctx.arcTo(x + logoW, y, x + logoW, y + logoH, logoR);
+            ctx.arcTo(x + logoW, y + logoH, x, y + logoH, logoR);
+            ctx.arcTo(x, y + logoH, x, y, logoR);
+            ctx.arcTo(x, y, x + logoW, y, logoR);
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(logoImage, x, y, logoW, logoH);
+            ctx.restore();
         }
 
         function generateQR() {
@@ -933,6 +1113,8 @@
                     fg: fgColor.value,
                     bg: bgColor.value
                 });
+
+                drawLogoOnCanvas(qrCanvas);
             } catch (e) {
                 showToast('Error: ' + e.message);
             }
@@ -943,9 +1125,53 @@
             if (!text) return;
 
             if (format === 'png') {
+                // Re-render at full resolution for download
+                const size = parseInt(document.getElementById('qrSize').value);
+                const tmpCanvas = document.createElement('canvas');
+                QRCode.toCanvas(tmpCanvas, text, {
+                    ecLevel: document.getElementById('qrEC').value,
+                    size: size,
+                    fg: fgColor.value,
+                    bg: bgColor.value
+                });
+                if (logoImage) {
+                    const ctx = tmpCanvas.getContext('2d');
+                    const ratio = parseFloat(document.getElementById('logoSize').value);
+                    const addBg = document.getElementById('logoBgWhite').checked;
+                    const logoW = tmpCanvas.width * ratio;
+                    const logoH = tmpCanvas.height * ratio;
+                    const x = (tmpCanvas.width - logoW) / 2;
+                    const y = (tmpCanvas.height - logoH) / 2;
+                    if (addBg) {
+                        const pad = logoW * 0.12;
+                        ctx.fillStyle = bgColor.value;
+                        ctx.beginPath();
+                        const r = pad * 0.8;
+                        const bx = x - pad, by = y - pad, bw = logoW + pad * 2, bh = logoH + pad * 2;
+                        ctx.moveTo(bx + r, by);
+                        ctx.arcTo(bx + bw, by, bx + bw, by + bh, r);
+                        ctx.arcTo(bx + bw, by + bh, bx, by + bh, r);
+                        ctx.arcTo(bx, by + bh, bx, by, r);
+                        ctx.arcTo(bx, by, bx + bw, by, r);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    ctx.save();
+                    const logoR = logoW * 0.08;
+                    ctx.beginPath();
+                    ctx.moveTo(x + logoR, y);
+                    ctx.arcTo(x + logoW, y, x + logoW, y + logoH, logoR);
+                    ctx.arcTo(x + logoW, y + logoH, x, y + logoH, logoR);
+                    ctx.arcTo(x, y + logoH, x, y, logoR);
+                    ctx.arcTo(x, y, x + logoW, y, logoR);
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.drawImage(logoImage, x, y, logoW, logoH);
+                    ctx.restore();
+                }
                 const link = document.createElement('a');
                 link.download = 'qrcode.png';
-                link.href = qrCanvas.toDataURL('image/png');
+                link.href = tmpCanvas.toDataURL('image/png');
                 link.click();
             } else {
                 const svg = QRCode.toSVG(text, {
@@ -971,7 +1197,7 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // Auto-generate on input change
+        // Auto-generate on text input
         qrText.addEventListener('input', debounce(generateQR, 400));
 
         function debounce(fn, delay) {
