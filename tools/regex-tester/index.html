@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Tester | Le Anh Quan Tools</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary:#0a0a0f; --bg-secondary:#111118; --bg-card:#16161e;
+            --text-primary:#e4e4e7; --text-secondary:#a1a1aa; --text-muted:#71717a;
+            --accent:#6366f1; --accent-light:#818cf8; --accent-2:#06b6d4;
+            --border:rgba(255,255,255,0.06); --border-hover:rgba(255,255,255,0.12);
+            --font-main:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:var(--font-main);background:var(--bg-primary);color:var(--text-primary);min-height:100vh}
+        .toolbar{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+        .back-link{color:var(--text-secondary);text-decoration:none;font-size:14px;transition:color .2s}
+        .back-link:hover{color:var(--accent-light)}
+        h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .main{max-width:960px;margin:24px auto;padding:0 24px}
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+        .regex-input-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .regex-delim{font-family:var(--font-mono);font-size:18px;color:var(--accent);font-weight:700}
+        .regex-input{flex:1;min-width:200px;padding:10px 12px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:14px;outline:none}
+        .regex-input:focus{border-color:var(--accent)}
+        .flags-input{width:60px;padding:10px 8px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--accent-light);font-family:var(--font-mono);font-size:14px;outline:none;text-align:center}
+        .flags-input:focus{border-color:var(--accent)}
+        .error-msg{color:#ef4444;font-size:12px;margin-top:8px;font-family:var(--font-mono)}
+        .info-bar{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+        .info-badge{font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(99,102,241,0.1);color:var(--accent-light);font-family:var(--font-mono)}
+        .test-area{width:100%;min-height:200px;padding:16px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:14px;line-height:1.8;outline:none;resize:vertical}
+        .test-area:focus{border-color:var(--accent)}
+        .highlight-area{width:100%;min-height:200px;padding:16px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;font-family:var(--font-mono);font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word;overflow:auto}
+        .match{background:rgba(99,102,241,0.25);border-bottom:2px solid var(--accent);border-radius:2px;padding:1px 0}
+        .match-alt{background:rgba(6,182,212,0.25);border-bottom:2px solid var(--accent-2);border-radius:2px;padding:1px 0}
+        .group-list{margin-top:12px}
+        .group-item{font-family:var(--font-mono);font-size:12px;padding:6px 10px;background:var(--bg-primary);border-radius:6px;margin-bottom:4px;display:flex;gap:8px}
+        .group-idx{color:var(--accent-light);min-width:60px}
+        .group-val{color:var(--text-primary);word-break:break-all}
+        .presets{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+        .preset-btn{padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-primary);color:var(--text-secondary);font-size:11px;cursor:pointer;transition:all .2s}
+        .preset-btn:hover{border-color:var(--accent);color:var(--accent-light)}
+        .section-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px}
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <a href="../" class="back-link">&larr; Tools</a>
+        <h1>Regex Tester</h1>
+        <div class="presets">
+            <button class="preset-btn" onclick="loadPreset('email')">Email</button>
+            <button class="preset-btn" onclick="loadPreset('url')">URL</button>
+            <button class="preset-btn" onclick="loadPreset('ip')">IP</button>
+            <button class="preset-btn" onclick="loadPreset('phone')">Phone</button>
+            <button class="preset-btn" onclick="loadPreset('date')">Date</button>
+        </div>
+    </div>
+    <div class="main">
+        <div class="card">
+            <div class="section-label">Regular Expression</div>
+            <div class="regex-input-row">
+                <span class="regex-delim">/</span>
+                <input type="text" id="regexInput" class="regex-input" value="(\w+)@(\w+)\.(\w+)" spellcheck="false" placeholder="Enter regex pattern...">
+                <span class="regex-delim">/</span>
+                <input type="text" id="flagsInput" class="flags-input" value="gm" spellcheck="false" placeholder="gim">
+            </div>
+            <div id="errorMsg" class="error-msg"></div>
+            <div class="info-bar" id="infoBar"></div>
+        </div>
+        <div class="card">
+            <div class="section-label">Test String</div>
+            <textarea id="testString" class="test-area" spellcheck="false" placeholder="Enter text to test against...">Contact us at hello@example.com or support@company.org
+Visit https://example.com for more info.
+IP: 192.168.1.1, Phone: +84-968-890-557
+Date: 2026-03-27, another@test.io</textarea>
+        </div>
+        <div class="card">
+            <div class="section-label">Matches</div>
+            <div id="highlightArea" class="highlight-area"></div>
+            <div id="groupList" class="group-list"></div>
+        </div>
+    </div>
+    <script>
+    const regexInput = document.getElementById('regexInput');
+    const flagsInput = document.getElementById('flagsInput');
+    const testString = document.getElementById('testString');
+    const highlightArea = document.getElementById('highlightArea');
+    const errorMsg = document.getElementById('errorMsg');
+    const infoBar = document.getElementById('infoBar');
+    const groupList = document.getElementById('groupList');
+
+    function escapeHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function runTest() {
+        const pattern = regexInput.value;
+        const flags = flagsInput.value;
+        const text = testString.value;
+        errorMsg.textContent = '';
+        infoBar.innerHTML = '';
+        groupList.innerHTML = '';
+
+        if (!pattern) {
+            highlightArea.textContent = text;
+            return;
+        }
+
+        let regex;
+        try {
+            regex = new RegExp(pattern, flags);
+        } catch(e) {
+            errorMsg.textContent = e.message;
+            highlightArea.textContent = text;
+            return;
+        }
+
+        const matches = [];
+        const groups = [];
+        let m;
+
+        if (flags.includes('g')) {
+            while ((m = regex.exec(text)) !== null) {
+                matches.push({ start: m.index, end: m.index + m[0].length, text: m[0] });
+                if (m.length > 1) {
+                    const g = { full: m[0], groups: [] };
+                    for (let i = 1; i < m.length; i++) g.groups.push(m[i]);
+                    groups.push(g);
+                }
+                if (m[0].length === 0) { regex.lastIndex++; }
+            }
+        } else {
+            m = regex.exec(text);
+            if (m) {
+                matches.push({ start: m.index, end: m.index + m[0].length, text: m[0] });
+                if (m.length > 1) {
+                    const g = { full: m[0], groups: [] };
+                    for (let i = 1; i < m.length; i++) g.groups.push(m[i]);
+                    groups.push(g);
+                }
+            }
+        }
+
+        // Info badges
+        infoBar.innerHTML = `<span class="info-badge">${matches.length} match${matches.length!==1?'es':''}</span>`;
+        if (groups.length) infoBar.innerHTML += `<span class="info-badge">${groups[0].groups.length} group${groups[0].groups.length!==1?'s':''}</span>`;
+
+        // Highlight
+        if (matches.length === 0) {
+            highlightArea.innerHTML = escapeHTML(text);
+        } else {
+            let html = '';
+            let lastIdx = 0;
+            matches.forEach((match, i) => {
+                html += escapeHTML(text.slice(lastIdx, match.start));
+                html += `<span class="${i%2===0?'match':'match-alt'}">${escapeHTML(match.text)}</span>`;
+                lastIdx = match.end;
+            });
+            html += escapeHTML(text.slice(lastIdx));
+            highlightArea.innerHTML = html;
+        }
+
+        // Groups
+        if (groups.length) {
+            groups.forEach((g, mi) => {
+                g.groups.forEach((val, gi) => {
+                    const d = document.createElement('div');
+                    d.className = 'group-item';
+                    d.innerHTML = `<span class="group-idx">Match ${mi+1}, Group ${gi+1}</span><span class="group-val">${escapeHTML(val || '(empty)')}</span>`;
+                    groupList.appendChild(d);
+                });
+            });
+        }
+    }
+
+    function loadPreset(name) {
+        const presets = {
+            email: { pattern: '[\\w.-]+@[\\w.-]+\\.\\w+', flags: 'gi', test: 'hello@example.com\nsupport@company.org\ninvalid@.com\nuser@test.io' },
+            url: { pattern: 'https?://[\\w.-]+(?:/[\\w./?%&=-]*)?', flags: 'gi', test: 'Visit https://example.com/path?q=1\nOr http://test.org\nNot a url: ftp://old.net' },
+            ip: { pattern: '\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b', flags: 'g', test: '192.168.1.1\n10.0.0.255\n999.999.999.999\n127.0.0.1' },
+            phone: { pattern: '\\+?\\d[\\d\\s-]{7,}\\d', flags: 'g', test: '+84-968-890-557\n0123 456 789\n+1-800-555-0199\n12345' },
+            date: { pattern: '\\d{4}[-/]\\d{2}[-/]\\d{2}', flags: 'g', test: '2026-03-27\n2025/12/31\n2024-01-15\nnot-a-date' }
+        };
+        const p = presets[name];
+        regexInput.value = p.pattern;
+        flagsInput.value = p.flags;
+        testString.value = p.test;
+        runTest();
+    }
+
+    regexInput.addEventListener('input', runTest);
+    flagsInput.addEventListener('input', runTest);
+    testString.addEventListener('input', runTest);
+
+    runTest();
+    </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Preview | Le Anh Quan Tools</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-primary:#0a0a0f;--bg-secondary:#111118;--bg-card:#16161e;
+            --text-primary:#e4e4e7;--text-secondary:#a1a1aa;--text-muted:#71717a;
+            --accent:#6366f1;--accent-light:#818cf8;--accent-2:#06b6d4;
+            --border:rgba(255,255,255,0.06);--border-hover:rgba(255,255,255,0.12);
+            --font-main:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:var(--font-main);background:var(--bg-primary);color:var(--text-primary);min-height:100vh;display:flex;flex-direction:column}
+        .toolbar{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+        .back-link{color:var(--text-secondary);text-decoration:none;font-size:14px;transition:color .2s}
+        .back-link:hover{color:var(--accent-light)}
+        h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .toolbar-actions{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+        .btn{padding:7px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s}
+        .btn:hover{border-color:var(--border-hover);background:var(--bg-secondary)}
+        .btn.active{border-color:var(--accent);color:var(--accent-light)}
+        .editor-container{display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden}
+        .editor-container.preview-only{grid-template-columns:0fr 1fr}
+        .editor-container.editor-only{grid-template-columns:1fr 0fr}
+        .panel{display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--border)}
+        .panel:last-child{border-right:none}
+        .panel-header{padding:8px 14px;background:var(--bg-secondary);border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center}
+        .panel-info{font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+        textarea{flex:1;padding:16px;background:var(--bg-primary);color:var(--text-primary);border:none;resize:none;font-family:var(--font-mono);font-size:13px;line-height:1.7;outline:none;tab-size:4}
+        textarea::placeholder{color:var(--text-muted)}
+        .preview{flex:1;padding:24px;overflow-y:auto;background:var(--bg-primary)}
+        /* Markdown rendered styles */
+        .preview h1{font-size:1.8em;font-weight:700;margin:0 0 .6em;padding-bottom:.3em;border-bottom:1px solid var(--border);color:var(--text-primary);background:none;-webkit-text-fill-color:var(--text-primary)}
+        .preview h2{font-size:1.4em;font-weight:600;margin:1.2em 0 .5em;padding-bottom:.2em;border-bottom:1px solid var(--border);color:var(--text-primary)}
+        .preview h3{font-size:1.15em;font-weight:600;margin:1em 0 .4em;color:var(--text-primary)}
+        .preview h4,.preview h5,.preview h6{font-size:1em;font-weight:600;margin:.8em 0 .3em;color:var(--text-secondary)}
+        .preview p{margin:0 0 1em;line-height:1.7;color:var(--text-secondary)}
+        .preview a{color:var(--accent-light);text-decoration:none}
+        .preview a:hover{text-decoration:underline}
+        .preview strong{color:var(--text-primary);font-weight:600}
+        .preview em{font-style:italic}
+        .preview ul,.preview ol{margin:0 0 1em 1.5em;color:var(--text-secondary)}
+        .preview li{margin-bottom:.3em;line-height:1.7}
+        .preview code{font-family:var(--font-mono);font-size:.9em;padding:2px 6px;background:rgba(99,102,241,0.1);border-radius:4px;color:var(--accent-light)}
+        .preview pre{margin:0 0 1em;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow-x:auto}
+        .preview pre code{padding:0;background:none;font-size:13px;line-height:1.6;color:var(--text-primary)}
+        .preview blockquote{margin:0 0 1em;padding:10px 16px;border-left:3px solid var(--accent);background:rgba(99,102,241,0.05);border-radius:0 6px 6px 0}
+        .preview blockquote p{margin:0;color:var(--text-secondary)}
+        .preview hr{border:none;border-top:1px solid var(--border);margin:1.5em 0}
+        .preview table{width:100%;border-collapse:collapse;margin:0 0 1em}
+        .preview th,.preview td{padding:8px 12px;border:1px solid var(--border);text-align:left;font-size:13px}
+        .preview th{background:var(--bg-secondary);font-weight:600;color:var(--text-primary)}
+        .preview td{color:var(--text-secondary)}
+        .preview img{max-width:100%;border-radius:8px}
+        .toast{position:fixed;bottom:24px;right:24px;padding:10px 20px;border-radius:8px;background:#22c55e;color:#fff;font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .3s;z-index:100}
+        .toast.show{opacity:1;transform:translateY(0)}
+        @media(max-width:700px){.editor-container{grid-template-columns:1fr!important;grid-template-rows:1fr 1fr}.panel{border-right:none;border-bottom:1px solid var(--border)}}
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <a href="../" class="back-link">&larr; Tools</a>
+        <h1>Markdown Preview</h1>
+        <div class="toolbar-actions">
+            <button class="btn active" id="btnSplit" onclick="setView('split')">Split</button>
+            <button class="btn" id="btnEditor" onclick="setView('editor')">Editor</button>
+            <button class="btn" id="btnPreview" onclick="setView('preview')">Preview</button>
+            <button class="btn" onclick="copyHTML()">Copy HTML</button>
+            <button class="btn" onclick="downloadMD()">Download .md</button>
+        </div>
+    </div>
+    <div class="editor-container" id="editorContainer">
+        <div class="panel">
+            <div class="panel-header">
+                <span>Markdown</span>
+                <span class="panel-info" id="editorInfo">0 words</span>
+            </div>
+            <textarea id="mdInput" placeholder="Write markdown here..." spellcheck="false"># Hello World
+
+Welcome to the **Markdown Preview** tool.
+
+## Features
+
+- Live preview as you type
+- GitHub-flavored markdown support
+- Code syntax highlighting
+- Copy as HTML
+
+## Code Example
+
+```javascript
+function greet(name) {
+    return `Hello, ${name}!`;
+}
+```
+
+## Table
+
+| Feature | Status |
+|---------|--------|
+| Headers | Done |
+| Lists | Done |
+| Code | Done |
+| Tables | Done |
+
+> This is a blockquote. It can contain **bold** and *italic* text.
+
+---
+
+Made with care by [Le Anh Quan](https://quanla93.github.io)
+</textarea>
+        </div>
+        <div class="panel">
+            <div class="panel-header">
+                <span>Preview</span>
+            </div>
+            <div class="preview" id="previewArea"></div>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script>
+    const mdInput = document.getElementById('mdInput');
+    const previewArea = document.getElementById('previewArea');
+    const editorInfo = document.getElementById('editorInfo');
+    const editorContainer = document.getElementById('editorContainer');
+
+    marked.setOptions({
+        breaks: true,
+        gfm: true
+    });
+
+    function renderMD() {
+        const text = mdInput.value;
+        previewArea.innerHTML = marked.parse(text);
+        const words = text.trim().split(/\s+/).filter(Boolean).length;
+        const chars = text.length;
+        editorInfo.textContent = `${words} words, ${chars} chars`;
+    }
+
+    function setView(mode) {
+        document.querySelectorAll('.toolbar-actions .btn').forEach(b => b.classList.remove('active'));
+        if (mode === 'split') { editorContainer.className = 'editor-container'; document.getElementById('btnSplit').classList.add('active'); }
+        else if (mode === 'editor') { editorContainer.className = 'editor-container editor-only'; document.getElementById('btnEditor').classList.add('active'); }
+        else { editorContainer.className = 'editor-container preview-only'; document.getElementById('btnPreview').classList.add('active'); }
+    }
+
+    function copyHTML() {
+        const html = previewArea.innerHTML;
+        navigator.clipboard.writeText(html).then(() => showToast('Copied HTML!'));
+    }
+
+    function downloadMD() {
+        const blob = new Blob([mdInput.value], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'document.md'; a.click();
+        URL.revokeObjectURL(url);
+        showToast('Downloaded!');
+    }
+
+    // Tab key support in editor
+    mdInput.addEventListener('keydown', e => {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = mdInput.selectionStart;
+            const end = mdInput.selectionEnd;
+            mdInput.value = mdInput.value.substring(0, start) + '    ' + mdInput.value.substring(end);
+            mdInput.selectionStart = mdInput.selectionEnd = start + 4;
+            renderMD();
+        }
+    });
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg; t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    mdInput.addEventListener('input', renderMD);
+    renderMD();
+    </script>
+</body>
+</html>
