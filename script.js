@@ -487,22 +487,6 @@ statNumbers.forEach(el => statsObserver.observe(el));
     });
 })();
 
-// ===== Contact Form =====
-document.getElementById('contactForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const btn = e.target.querySelector('.btn-submit');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = '<span>Message Sent!</span> <i class="fas fa-check"></i>';
-    btn.style.background = 'linear-gradient(135deg, #22c55e, #06b6d4)';
-
-    setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.style.background = '';
-        e.target.reset();
-    }, 3000);
-});
-
 // ===== Smooth scroll for all anchor links =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
