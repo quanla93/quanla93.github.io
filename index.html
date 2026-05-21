@@ -11,7 +11,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="booting">
+    <!-- Spring Boot intro -->
+    <div id="bootScreen" class="boot-screen">
+        <pre class="boot-banner">  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: QuanLA Portfolio ::            (v4.7.RELEASE)</pre>
+        <div class="boot-log" id="bootLog"></div>
+        <button type="button" class="boot-skip" id="bootSkip">Press [Esc] to skip</button>
+    </div>
+
+    <!-- Lights-off mask (flashlight) -->
+    <div id="lightsMask" class="lights-mask" aria-hidden="true"></div>
+
+    <!-- FAB controls -->
+    <div class="fab-controls">
+        <button type="button" class="fab" id="lightsToggle" title="Lights off (L)" aria-label="Toggle lights">
+            <i class="fas fa-lightbulb"></i>
+        </button>
+        <button type="button" class="fab" id="terminalOpenBtn" title="Open terminal (~)" aria-label="Open terminal">
+            <i class="fas fa-terminal"></i>
+        </button>
+    </div>
+
+    <!-- Terminal overlay -->
+    <div id="terminal" class="terminal" aria-hidden="true">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-dots"><span class="t-dot red"></span><span class="t-dot yellow"></span><span class="t-dot green"></span></span>
+                <span class="terminal-title">guest@quanla.org: ~</span>
+                <button type="button" class="terminal-close" id="terminalClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="terminal-body" id="terminalBody">
+                <div class="terminal-output" id="terminalOutput"><div class="t-line t-muted">Welcome to <span class="t-accent">quanla.org</span> shell. Type <span class="t-cmd">help</span> for commands, <span class="t-cmd">exit</span> to close.</div></div>
+                <div class="terminal-prompt-line">
+                    <span class="terminal-prompt">guest@quanla.org:~$</span>
+                    <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" autocapitalize="off" />
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Cursor glow effect -->
     <div class="cursor-glow" id="cursorGlow"></div>
 
@@ -116,6 +160,8 @@
             </div>
             <span>Scroll Down</span>
         </div>
+        <span class="easter-egg ee-hero-1">// TODO(quan): hire me</span>
+        <span class="easter-egg ee-hero-2">$ uptime &mdash; 4y 10m, still caffeinated</span>
     </section>
 
     <!-- About Section -->
@@ -174,6 +220,7 @@
                     </div>
                 </div>
             </div>
+            <span class="easter-egg ee-about-1">&starf; secretly tunes JVM at 2AM</span>
         </div>
     </section>
 
@@ -250,6 +297,7 @@
                     </div>
                 </div>
             </div>
+            <span class="easter-egg ee-skills-1">also speaks: bash &middot; sql &middot; vim (occasionally)</span>
         </div>
     </section>
 
@@ -321,6 +369,7 @@
                     </div>
                 </div>
             </div>
+            <span class="easter-egg ee-exp-1">// 30min &rarr; 5min &mdash; still feels slow</span>
         </div>
     </section>
 
@@ -465,6 +514,7 @@
                     </div>
                 </div>
             </div>
+            <span class="easter-egg ee-proj-1">cat /var/log/coffee.log &rarr; ALL_TIME_HIGH &#9749;</span>
         </div>
     </section>
 
@@ -526,6 +576,7 @@
                     </div>
                 </div>
             </div>
+            <span class="easter-egg ee-contact-1">or send a carrier pigeon &#128330;</span>
         </div>
     </section>
 

@@ -1160,3 +1160,332 @@ body:hover .cursor-glow { opacity: 1; }
     .section-title { font-size: 1.5rem; margin-bottom: 40px; }
     .code-body { font-size: 0.75rem; padding: 16px; }
 }
+
+/* ===== Spring Boot Intro ===== */
+body.booting { overflow: hidden; }
+
+.boot-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 6vh 6vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4em;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.boot-screen.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.boot-banner {
+    color: #6ee7b7;
+    white-space: pre;
+    font-family: var(--font-mono);
+    font-size: clamp(9px, 1.15vw, 14px);
+    line-height: 1.3;
+    text-shadow: 0 0 14px rgba(110, 231, 183, 0.35);
+    margin: 0;
+}
+
+.boot-log {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: clamp(10px, 0.95vw, 13px);
+    line-height: 1.55;
+}
+
+.boot-log .line {
+    opacity: 0;
+    animation: bootLineIn 0.22s ease forwards;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.boot-log .ts { color: var(--text-muted); }
+.boot-log .lvl-info { color: #06b6d4; font-weight: 600; }
+.boot-log .lvl-ok { color: #22c55e; font-weight: 600; }
+.boot-log .src { color: #a78bfa; }
+.boot-log kbd {
+    font-family: var(--font-mono);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.85em;
+    color: var(--text-primary);
+}
+
+@keyframes bootLineIn {
+    from { opacity: 0; transform: translateY(2px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.boot-skip {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all var(--transition);
+}
+
+.boot-skip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .boot-screen { display: none; }
+    body.booting { overflow: auto; }
+}
+
+/* ===== Lights-off Flashlight ===== */
+.lights-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 9100;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+    background: radial-gradient(
+        circle 160px at var(--mx, 50%) var(--my, 50%),
+        transparent 0%,
+        rgba(0, 0, 0, 0.5) 90px,
+        rgba(0, 0, 0, 0.96) 220px
+    );
+}
+
+body.lights-off .lights-mask {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.lights-off .cursor-glow { opacity: 0 !important; }
+
+/* ===== Easter eggs (hidden until lights off) ===== */
+.easter-egg {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #fde68a;
+    text-shadow: 0 0 12px rgba(253, 230, 138, 0.4);
+    opacity: 0;
+    transform: rotate(-3deg);
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: opacity 0.4s ease;
+    z-index: 2;
+    white-space: nowrap;
+}
+
+body.lights-off .easter-egg { opacity: 1; }
+
+.ee-hero-1     { top: 14%;    right: 6%;    transform: rotate(4deg); }
+.ee-hero-2     { bottom: 22%; left: 4%;     transform: rotate(-5deg); color: #86efac; }
+.ee-about-1    { bottom: 8px; right: 8px;   transform: rotate(2deg); color: #f9a8d4; }
+.ee-skills-1   { bottom: 8px; left: 50%;    transform: translateX(-50%) rotate(-1deg); color: #93c5fd; }
+.ee-exp-1      { bottom: 12px; right: 12px; transform: rotate(3deg); color: #fcd34d; }
+.ee-proj-1     { top: 70px;  right: 12px;   transform: rotate(-3deg); color: #fda4af; }
+.ee-contact-1  { bottom: 12px; left: 16px;  transform: rotate(-2deg); color: #c4b5fd; }
+
+/* ===== FAB Controls ===== */
+.fab-controls {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 9200;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fab {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border-hover);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.fab:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-glow);
+}
+
+#lightsToggle.is-off {
+    color: #fbbf24;
+    border-color: #fbbf24;
+    box-shadow: 0 0 18px rgba(251, 191, 36, 0.45);
+}
+
+/* ===== Terminal Overlay ===== */
+.terminal {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    background: rgba(0, 0, 0, 0.7);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+body.terminal-open .terminal {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.terminal-open { overflow: hidden; }
+
+.terminal-window {
+    width: min(820px, 100%);
+    height: min(560px, 85vh);
+    background: #0c0c12;
+    border: 1px solid var(--border-hover);
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(99,102,241,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.96);
+    transition: transform 0.25s ease;
+}
+
+body.terminal-open .terminal-window { transform: scale(1); }
+
+.terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #16161e;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.terminal-dots { display: flex; gap: 6px; }
+.t-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    display: block;
+}
+.t-dot.red    { background: #ef4444; }
+.t-dot.yellow { background: #f59e0b; }
+.t-dot.green  { background: #22c55e; }
+
+.terminal-title { flex: 1; text-align: center; }
+
+.terminal-close {
+    background: transparent;
+    border: 0;
+    color: var(--text-muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color var(--transition);
+}
+.terminal-close:hover { color: #ef4444; }
+
+.terminal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #d4d4d8;
+    line-height: 1.6;
+    background:
+        radial-gradient(ellipse at top, rgba(99,102,241,0.06), transparent 60%),
+        #0c0c12;
+}
+
+.terminal-output .t-line {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.t-muted   { color: var(--text-muted); }
+.t-accent  { color: var(--accent-light); }
+.t-cmd     { color: #fbbf24; }
+.t-ok      { color: #22c55e; }
+.t-err     { color: #ef4444; }
+.t-dir     { color: var(--accent-2); font-weight: 600; }
+.t-key     { color: #f9a8d4; }
+
+.terminal-prompt-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.terminal-prompt {
+    color: #22c55e;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    caret-color: var(--accent-light);
+}
+
+.t-echo {
+    display: flex;
+    gap: 8px;
+}
+.t-echo .terminal-prompt { color: #22c55e; }
+
+@media (max-width: 600px) {
+    .easter-egg { font-size: 11px; }
+    .terminal-window { height: 90vh; }
+    .fab { width: 40px; height: 40px; font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lights-mask, .terminal, .terminal-window, .easter-egg { transition: none; }
+}
