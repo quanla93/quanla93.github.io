@@ -1,3 +1,11 @@
 .DS_Store
 Thumbs.db
 *.pdf
+
+# Claude Code workspace
+.claude/
+
+# Node / Next.js (also covered by landing/.gitignore for the landing/ folder)
+node_modules/
+.next/
+out/
