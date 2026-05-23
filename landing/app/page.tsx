@@ -230,20 +230,6 @@ export default function Home() {
               description="Personal infra running quanla.org — Proxmox VE with KVM/LXC, Tailscale mesh, Prometheus + Grafana for observability, Linux administration end-to-end."
               tags={["Proxmox", "Tailscale", "Prometheus"]}
             />
-            <ProjectRow
-              name="dev-tools"
-              badge="Web"
-              description="A growing set of free, client-side dev tools — CSV→JSON, QR generator with logo overlay, Lorem ipsum, regex tester, gradient generator. No tracking, no server."
-              tags={["HTML", "JS", "CSS"]}
-              href="/me/tools/"
-            />
-            <ProjectRow
-              name="portfolio"
-              badge="Web"
-              description="Long-form portfolio with terminal overlay, lights-off flashlight and a Spring Boot boot screen for fun — pure HTML/CSS/JS, no frameworks."
-              tags={["HTML", "JS", "CSS"]}
-              href="/me/"
-            />
           </div>
         </Section>
 
@@ -281,7 +267,6 @@ export default function Home() {
 
         <Section id="links" title="Links" meta="06">
           <div className="grid gap-2">
-            <LinkRow path="/me" description="Long-form portfolio, dev tools" href="/me/" />
             <LinkRow path="/blog" description="Notes on Java, SQL tuning, homelab" href="/blog/" />
             <LinkRow
               path="/github"

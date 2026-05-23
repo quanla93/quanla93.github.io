@@ -1,40 +1,29 @@
-# Le Anh Quan - Portfolio
+# Le Anh Quan - Landing Page
 
-Personal portfolio website showcasing my experience as a Java Developer.
-
-**Live:** [quanla93.github.io](https://quanla93.github.io/)
+Minimalist personal landing page for quanla.org.
 
 ## Tech Stack
 
-- Pure HTML / CSS / JavaScript
-- No frameworks, no build tools
-- GitHub Pages deployment
+- Next.js 16 (App Router) + React 19
+- TypeScript, Tailwind CSS v4
+- Static export (`output: "export"`)
 
-## Developer Tools
+## Local dev
 
-Free, client-side tools included in the portfolio:
-
-| Tool | Description |
-|------|-------------|
-| [CSV to JSON](tools/csv-to-json/) | Convert CSV to JSON with auto type detection, drag & drop |
-| [Lorem Ipsum Generator](tools/lorem-ipsum/) | Placeholder text with character limit, multiple variants |
-| [QR Code Generator](tools/qr-generator/) | Custom QR codes with color picker, PNG/SVG export |
-
-All tools run 100% in the browser - no server, no tracking.
-
-## Structure
-
+```bash
+cd landing
+npm install
+npm run dev
+npm run build
 ```
-portfolio/
-├── index.html          # Main portfolio page
-├── style.css           # Styles
-├── script.js           # Interactions & animations
-├── tools/
-│   ├── index.html      # Tools hub
-│   ├── csv-to-json/
-│   ├── lorem-ipsum/
-│   └── qr-generator/
+
+## Build from repo root
+
+```bash
+node build-site.mjs
 ```
+
+The static output is generated at `landing/out/`.
 
 ## Contact
 
