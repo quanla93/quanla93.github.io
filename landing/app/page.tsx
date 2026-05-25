@@ -5,6 +5,7 @@ import { LinkRow } from "./components/link-row";
 import { StackGroup } from "./components/stack-group";
 import { ExperienceCard, Bullet } from "./components/experience-card";
 import { AwardRow } from "./components/award-row";
+import { FluidGradientText } from "./components/fluid-gradient-text";
 import { RolePill } from "./components/role-pill";
 import { ThemeToggle } from "./components/theme-toggle";
 import {
@@ -265,40 +266,25 @@ export default function Home() {
           </div>
         </Section>
 
-        <Section id="links" title="Links" meta="06">
-          <div className="grid gap-2">
-            <LinkRow path="/blog" description="Notes on Java, SQL tuning, homelab" href="/blog/" />
-            <LinkRow
-              path="/github"
-              description="github.com/quanla93"
-              href="https://github.com/quanla93"
-              external
-            />
-            <LinkRow
-              path="/linkedin"
-              description="linkedin.com/in/quanla-work"
-              href="https://www.linkedin.com/in/quanla-work"
-              external
-            />
-            <LinkRow
-              path="/mail"
-              description="quanla.work@gmail.com"
-              href="mailto:quanla.work@gmail.com"
-              external
-            />
-          </div>
-        </Section>
       </main>
 
-      <footer className="mx-auto w-full max-w-4xl px-5 pb-10">
-        <div className="border-t border-line pt-6">
-          <div className="flex flex-col items-start justify-between gap-2 font-mono text-[11px] text-subtle sm:flex-row sm:items-center">
+      <footer className="overflow-x-hidden px-2 pb-10">
+        <div className="screen-line-top mx-auto max-w-4xl border-x border-line bg-background">
+          <div className="screen-line-top screen-line-bottom flex w-full before:z-1 after:z-1">
+            <div className="mx-auto flex items-center justify-center border-x border-line bg-background px-4 py-3 font-mono text-[11px] tracking-[0.2em] text-subtle uppercase">
+              landing only · quanla.org
+            </div>
+          </div>
+          <div className="flex flex-col items-start justify-between gap-2 px-4 py-5 font-mono text-[11px] text-subtle sm:flex-row sm:items-center">
             <span>© {new Date().getFullYear()} Le Anh Quan</span>
             <span>
               built with <span className="text-foreground">next.js</span> · hosted at{" "}
               <span className="text-foreground">quanla.org</span>
             </span>
           </div>
+        </div>
+        <div className="screen-line-bottom mx-auto h-36 max-w-6xl text-foreground after:z-1 after:bg-foreground/15 sm:h-48 md:h-60">
+          <FluidGradientText text="Anh Quan" svgViewBoxWidth={1500} svgViewBoxHeight={300} />
         </div>
       </footer>
     </div>

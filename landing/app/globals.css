@@ -102,3 +102,27 @@ body {
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+.screen-line-top,
+.screen-line-bottom {
+  position: relative;
+}
+
+.screen-line-top::before,
+.screen-line-bottom::after {
+  content: "";
+  position: absolute;
+  left: -100vw;
+  z-index: -1;
+  width: 200vw;
+  height: 1px;
+  background: var(--line);
+}
+
+.screen-line-top::before {
+  top: 0;
+}
+
+.screen-line-bottom::after {
+  bottom: 0;
+}
